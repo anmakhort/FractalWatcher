@@ -1,4 +1,10 @@
 #include <stdio.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <time.h>
+
 #include <math.h>
 
 #include "concolor.h"
@@ -11,6 +17,9 @@ int endian;
 #ifdef _VERBOSE
 counter_t cntr = 0;
 #endif
+
+static char _images_dir_[64];
+static unsigned int n_snap = 0;
 
 flag_t need_update = 0;
 flag_t animate = 0;
@@ -36,8 +45,23 @@ int my_loop();
 int mouse_move(int x, int y);
 int	key_released(int key);
 
+void current_date_time(char *buff, const char *base_dir) {
+	if (!buff) return;
+
+	time_t t = time(NULL);
+	struct tm local = *localtime(&t);
+	sprintf(buff, "%s/%d-%d-%d_%dh%dm%ds/", \
+		base_dir, local.tm_year+1900, local.tm_mon+1, \
+		local.tm_mday, local.tm_hour, local.tm_min, local.tm_sec);
+	
+	struct stat st = {0};
+	if (stat(buff, &st) == -1) mkdir(buff, 0700);
+}
+
 
 int main() {
+	current_date_time(_images_dir_, IMAGES_BASE_DIR);
+
 	endian = is_BigEndian();
 #ifdef _VERBOSE
 	printf("[%lu] ENDIAN -- %s\n", ++cntr, (!endian ? BOLD("Little", _FG_YELLOW_) : BOLD("Big", _FG_YELLOW_)));
@@ -128,6 +152,7 @@ int mouse_move(int x, int y) {
 }
 
 int	key_released(int key) {
+	printf("0x%x\n", key);
 	if (key == KEYBOARD_EXIT_KEY || key == KEYBOARD_QUIT_KEY) {
 		mlx_destroy_image(hWnd.mlx_ptr, image.img_buff);
 #ifdef _VERBOSE
@@ -227,8 +252,13 @@ int	key_released(int key) {
 			save_position = !save_position;
 			need_update = 2;
 			break;
+		case KEYBOARD_B_KEY:
+			mlx_snap_window(hWnd.mlx_ptr, hWnd.mlx_win, _images_dir_, \
+				(mandelbrot ? "Mandelbrot" : "Julia"), (++n_snap), FORMAT_BMP);
+			break;
 		case KEYBOARD_P_KEY:
-			mlx_snap_window(hWnd.mlx_ptr, hWnd.mlx_win, NULL);
+			mlx_snap_window(hWnd.mlx_ptr, hWnd.mlx_win, _images_dir_, \
+				(mandelbrot ? "Mandelbrot" : "Julia"), (++n_snap), FORMAT_PNG);
 			break;
 		default:
 			return 1;

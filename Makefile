@@ -8,12 +8,12 @@ CFLAGS = -std=c99 -Wall -Wextra -Werror
 #TARGET_VERBOSE = -D_VERBOSE
 DEFINES = -D_XOPEN_SOURCE
 INCLUDES = -I/usr/include -I/usr/X11/include
-LDFLAGS = -L../../minilibx/ -lmlx -L/usr/lib -lXext -lX11 -lm
+LDFLAGS = -L../../minilibx/ -lmlx -L/usr/lib -lXext -lX11 -lm -lpng
 LIBS =
 
 TARGET = graphics
 
-SOURCES = graphics.c
+SOURCES = graphics.c mlx_screenshot.c
 OBJECTS = $(SOURCES:.c=.o)
 
 RM = rm -fr

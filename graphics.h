@@ -1,6 +1,10 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+
+#define IMAGES_BASE_DIR "./Images/"
+
+
 typedef unsigned char flag_t;
 typedef unsigned int color_t;
 typedef unsigned long counter_t;
@@ -53,6 +57,7 @@ typedef unsigned long counter_t;
 #define KEYBOARD_UP_KEY		0xff52
 #define KEYBOARD_DOWN_KEY	0xff54
 #define KEYBOARD_P_KEY		0x70
+#define KEYBOARD_B_KEY		0x62
 #define KEYBOARD_M_KEY		0x6d
 #define KEYBOARD_A_KEY		0x61
 #define KEYBOARD_L_KEY		0x6c
