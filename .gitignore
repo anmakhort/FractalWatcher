@@ -4,3 +4,4 @@ RECORD_VIDEO
 *.png
 graphics
 *.o
+minilibx/*
