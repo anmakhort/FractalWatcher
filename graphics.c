@@ -86,7 +86,7 @@ int main() {
 	}
 #endif
 
-    hWnd.mlx_win = mlx_new_window(hWnd.mlx_ptr, IMAGE_BUFFER_WIDTH, IMAGE_BUFFER_HEIGHT, "Fractal Watcher");
+    hWnd.mlx_win = mlx_new_window(hWnd.mlx_ptr, IMAGE_BUFFER_WIDTH, IMAGE_BUFFER_HEIGHT, WND_TITLE, WND_BG_COLOR);
     if (!hWnd.mlx_win) {
 #ifdef _VERBOSE
     	printf(BOLD("ERROR: ", _FG_RED_) "Can't create a new window!\n");

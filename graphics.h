@@ -2,6 +2,8 @@
 #define GRAPHICS_H
 
 
+#define WND_BG_COLOR	0
+#define WND_TITLE		"Fractal Watcher"
 #define IMAGES_BASE_DIR "./Images/"
 
 
