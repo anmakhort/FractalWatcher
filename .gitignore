@@ -1,7 +1,5 @@
-*.mp4
-RECORD_VIDEO
 *.bmp
 *.png
-graphics
+fractwtcher
 *.o
 minilibx/*
