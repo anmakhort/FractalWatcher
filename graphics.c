@@ -5,12 +5,11 @@
 #include <unistd.h>
 #include <time.h>
 
-#include <math.h>
-
 #include "concolor.h"
 #include "graphics.h"
 #include "mlx_screenshot.h"
 #include "helpwnd.h"
+#include "coloring.h"
 
 
 int endian;
@@ -26,6 +25,17 @@ flag_t need_update = 0;
 flag_t animate = 0;
 flag_t mandelbrot = 1;
 flag_t save_position = 0;
+
+
+unsigned coloring_idx = 0;
+
+coloring_func_t coloring_functions[] = {	coloring0, coloring1,\
+											coloring2, coloring3,\
+											coloring4, coloring5,\
+											coloring6, coloring7,\
+											coloring8, coloring9\
+									};
+
 
 unsigned n_iters = NORMAL_ITERATIONS;
 
@@ -256,8 +266,10 @@ int	key_released(int key) {
 			}
 			break;
 		case KEYBOARD_S_KEY:
-			save_position = !save_position;
-			need_update = 2;
+			if (!mandelbrot) {
+				save_position = !save_position;
+				need_update = 2;
+			} else return 1;
 			break;
 		case KEYBOARD_B_KEY:
 			mlx_snap_window(hWnd.mlx_ptr, hWnd.mlx_win, _images_dir_, \
@@ -269,6 +281,46 @@ int	key_released(int key) {
 			break;
 		case KEYBOARD_H_KEY:
 			show_help_window(hWnd.mlx_ptr);
+			break;
+		case KEYBOARD_0_KEY:
+			coloring_idx = 0;
+			need_update = 1;
+			break;
+		case KEYBOARD_1_KEY:
+			coloring_idx = 1;
+			need_update = 1;
+			break;
+		case KEYBOARD_2_KEY:
+			coloring_idx = 2;
+			need_update = 1;
+			break;
+		case KEYBOARD_3_KEY:
+			coloring_idx = 3;
+			need_update = 1;
+			break;
+		case KEYBOARD_4_KEY:
+			coloring_idx = 4;
+			need_update = 1;
+			break;
+		case KEYBOARD_5_KEY:
+			coloring_idx = 5;
+			need_update = 1;
+			break;
+		case KEYBOARD_6_KEY:
+			coloring_idx = 6;
+			need_update = 1;
+			break;
+		case KEYBOARD_7_KEY:
+			coloring_idx = 7;
+			need_update = 1;
+			break;
+		case KEYBOARD_8_KEY:
+			coloring_idx = 8;
+			need_update = 1;
+			break;
+		case KEYBOARD_9_KEY:
+			coloring_idx = 9;
+			need_update = 1;
 			break;
 		default:
 			return 1;
@@ -324,7 +376,7 @@ int my_loop() {
 			mlx_string_put(hWnd.mlx_ptr, hWnd.mlx_win, 45, 25, 0x00b0af, str);
 
 			if (save_position) {
-				mlx_string_put(hWnd.mlx_ptr, hWnd.mlx_win, 230, 25, 0xff0000, "Position saved (Undo: press 's')");
+				mlx_string_put(hWnd.mlx_ptr, hWnd.mlx_win, 230, 25, 0x0f5f5f, "Position saved (Undo: press 's')");
 			}
 		} else {
 			mlx_string_put(hWnd.mlx_ptr, hWnd.mlx_win, 5, 25, 0x00b00af, "Mandelbrot");
@@ -364,13 +416,7 @@ int	fill_image(unsigned char *data, int bpp, int sl, int w, int h) {
 				if (magn > r*r) break;
 			}
 
-			color_t color = RGB2YIQ(0,magn/(r*r),(double)i/n_iters);
-
-			/*if (abs(i-n_iters) <= 5) color = 0xffd700; // interior
-			else {	// exterior
-				if (abs(magn-r*r) <= 1.e-8) color = ((int)(255.*(z_x*z_x+z_y*z_y)) % 256);
-				else color = PACK_COLOR_RGB(r,0xbf,0xff);
-			}*/
+			color_t color = coloring_functions[coloring_idx](z_x, z_y, i, n_iters, r);
 
 			dec = opp;
 			while (dec--) {

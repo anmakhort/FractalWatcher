@@ -11,20 +11,8 @@
 
 
 typedef unsigned char flag_t;
-typedef unsigned int color_t;
 typedef unsigned long counter_t;
 
-#define PACK_COLOR_RGB(r,g,b) (color_t)(((color_t)(r)<<0x10)|((color_t)(g)<<0x8)|((color_t)(b)))
-
-/*
-|y|   |0.299  0.587   0.114	 |   |r|
-|i| = |0.596  -0.274  -0.321 | * |g|
-|q|   |0.211  -0.523  0.311  |   |b|
-*/
-#define RGB2YIQ(r,g,b) PACK_COLOR_RGB(		\
-	(color_t)(255.*(.299*r+.587*g+.114*b)),	\
-	(color_t)(255.*(.596*r-.274*g-.321*b)),	\
-	(color_t)(255.*(.211*r-.523*g+.311*b)))
 
 #define SCREEN_TO_CX_MIN	-1.2
 #define SCREEN_TO_CX_MAX	1.2
@@ -71,6 +59,16 @@ typedef unsigned long counter_t;
 #define KEYBOARD_J_KEY		0x6a
 #define KEYBOARD_K_KEY		0x6b
 #define KEYBOARD_S_KEY		0x73
+#define KEYBOARD_0_KEY		0x30
+#define KEYBOARD_1_KEY		0x31
+#define KEYBOARD_2_KEY		0x32
+#define KEYBOARD_3_KEY		0x33
+#define KEYBOARD_4_KEY		0x34
+#define KEYBOARD_5_KEY		0x35
+#define KEYBOARD_6_KEY		0x36
+#define KEYBOARD_7_KEY		0x37
+#define KEYBOARD_8_KEY		0x38
+#define KEYBOARD_9_KEY		0x39
 
 #define GET_ZOOM_DELTA(zoom) \
 	(zoom < 10.) ? 0.5 : ((zoom < 50.) ? 2.5 : (\

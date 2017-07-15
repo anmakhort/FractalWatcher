@@ -6,8 +6,7 @@
 
 static void *__mlx_helpwnd_win__;
 
-int __key_released(int key, void *mlx_ptr) {
-	key = key;
+int __key_released(int key __attribute__((unused)), void *mlx_ptr) {
 	if (mlx_ptr && __mlx_helpwnd_win__) {
 		mlx_destroy_window(mlx_ptr, __mlx_helpwnd_win__);
 		__mlx_helpwnd_win__ = NULL;

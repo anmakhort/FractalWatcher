@@ -13,7 +13,7 @@ LDFLAGS = -L./minilibx/ -lmlx -L/usr/lib -lXext -lX11 -lm -lpng
 LIBS =
 
 TARGET = fractwtcher
-SOURCES = graphics.c mlx_screenshot.c helpwnd.c
+SOURCES = graphics.c mlx_screenshot.c helpwnd.c coloring.c
 OBJECTS = $(SOURCES:.c=.o)
 
 RM = rm -fr
