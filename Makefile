@@ -1,4 +1,5 @@
 #################################################################
+# Makefile for 'Fractal Watcher' GUI application
 # Author: Anatolii MAKHORT
 # e-mail: anmakhort@gmail.com
 #################################################################
@@ -8,17 +9,17 @@ CFLAGS = -std=c99 -Wall -Wextra -Werror
 #TARGET_VERBOSE = -D_VERBOSE
 DEFINES = -D_XOPEN_SOURCE
 INCLUDES = -I/usr/include -I/usr/X11/include
-LDFLAGS = -L../../minilibx/ -lmlx -L/usr/lib -lXext -lX11 -lm -lpng
+LDFLAGS = -L./minilibx/ -lmlx -L/usr/lib -lXext -lX11 -lm -lpng
 LIBS =
 
-TARGET = graphics
+TARGET = fractwtcher
 SOURCES = graphics.c mlx_screenshot.c helpwnd.c
 OBJECTS = $(SOURCES:.c=.o)
 
 RM = rm -fr
 MK = mkdir -p
 
-.PHONY: all, run, clean, distclean, objclean
+.PHONY: all, run, clean, distclean, objclean, imgclean
 
 all: $(TARGET)
 
@@ -36,5 +37,8 @@ distclean:
 
 objclean:
 	@$(RM) $(OBJECTS)
+
+imgclean:
+	@$(RM) Images
 
 clean: distclean objclean

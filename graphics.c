@@ -136,7 +136,7 @@ int main() {
 
     mlx_key_hook(hWnd.mlx_win, key_released, NULL);
     mlx_hook(hWnd.mlx_win, MotionNotify, PointerMotionMask, mouse_move, NULL);
-    mlx_loop_hook (hWnd.mlx_ptr, my_loop, NULL);
+    mlx_loop_hook(hWnd.mlx_ptr, my_loop, NULL);
 
     need_update = 1;
 
@@ -151,8 +151,8 @@ int mouse_move(int x, int y) {
 	mouse_Y = affine_transf(y, IMAGE_BUFFER_HEIGHT, cy_0, cy_1);
 	if (!mandelbrot) {
 		if (!save_position) {
-			julia_X = affine_transf(x, IMAGE_BUFFER_WIDTH, 2.*SCREEN_TO_CX_MIN, 2.*SCREEN_TO_CX_MAX);
-			julia_Y = affine_transf(y, IMAGE_BUFFER_HEIGHT, 2.*SCREEN_TO_CY_MIN, 2.*SCREEN_TO_CY_MAX);
+			julia_X = affine_transf(x, IMAGE_BUFFER_WIDTH, JULIA_SCREEN_TO_CX_MIN, JULIA_SCREEN_TO_CX_MAX);
+			julia_Y = affine_transf(y, IMAGE_BUFFER_HEIGHT, JULIA_SCREEN_TO_CY_MIN, JULIA_SCREEN_TO_CY_MAX);
 		}
 		need_update = 1;
 	} else need_update = 2;
@@ -285,11 +285,17 @@ int	key_released(int key) {
 int my_loop() {
 	if (need_update) {
 		if (need_update == 3) {
-			zoom += GET_ANIMATE_ZOOM_DELTA(zoom);
-			cx_0 = SCREEN_TO_CX_MIN / zoom;
-			cx_1 = SCREEN_TO_CX_MAX / zoom;
-			cy_0 = SCREEN_TO_CY_MIN / zoom;
-			cy_1 = SCREEN_TO_CY_MAX / zoom;
+			if (zoom < MAX_ANIMATE_ZOOM) {
+				zoom += GET_ANIMATE_ZOOM_DELTA(zoom);
+				cx_0 = SCREEN_TO_CX_MIN / zoom;
+				cx_1 = SCREEN_TO_CX_MAX / zoom;
+				cy_0 = SCREEN_TO_CY_MIN / zoom;
+				cy_1 = SCREEN_TO_CY_MAX / zoom;
+			} else {
+				animate = 0;
+				need_update = 0;
+				return 0;
+			}
 		}
 		if (need_update == 1 || need_update == 3) {
 			mlx_clear_window(hWnd.mlx_ptr, hWnd.mlx_win);
@@ -312,8 +318,13 @@ int my_loop() {
 
 		if (!mandelbrot) {
 			mlx_string_put(hWnd.mlx_ptr, hWnd.mlx_win, 5, 25, 0x00b0af, "Julia");
+
+			memset(str, 0, 128);
+			sprintf(str, "z=(%.8f;%.8f)", julia_X, julia_Y);
+			mlx_string_put(hWnd.mlx_ptr, hWnd.mlx_win, 45, 25, 0x00b0af, str);
+
 			if (save_position) {
-				mlx_string_put(hWnd.mlx_ptr, hWnd.mlx_win, 45, 25, 0xff0000, "Position saved (Undo: press 's')");
+				mlx_string_put(hWnd.mlx_ptr, hWnd.mlx_win, 230, 25, 0xff0000, "Position saved (Undo: press 's')");
 			}
 		} else {
 			mlx_string_put(hWnd.mlx_ptr, hWnd.mlx_win, 5, 25, 0x00b00af, "Mandelbrot");

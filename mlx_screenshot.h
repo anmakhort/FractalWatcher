@@ -2,8 +2,8 @@
 #define MLX_SCREENSHOT_H
 
 #include <png.h>
-#include "../../minilibx/mlx.h"
-#include "../../minilibx/mlx_int.h"
+#include "./minilibx/mlx.h"
+#include "./minilibx/mlx_int.h"
 
 
 #pragma pack (1)

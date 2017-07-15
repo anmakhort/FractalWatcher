@@ -1,7 +1,7 @@
 #include "helpwnd.h"
 
-#include "../../minilibx/mlx.h"
-#include "../../minilibx/mlx_int.h"
+#include "./minilibx/mlx.h"
+#include "./minilibx/mlx_int.h"
 
 
 static void *__mlx_helpwnd_win__;
@@ -9,8 +9,6 @@ static void *__mlx_helpwnd_win__;
 int __key_released(int key, void *mlx_ptr) {
 	key = key;
 	if (mlx_ptr && __mlx_helpwnd_win__) {
-		//mlx_destroy_image(mlx_ptr, __image__);
-		//__image__ = NULL;
 		mlx_destroy_window(mlx_ptr, __mlx_helpwnd_win__);
 		__mlx_helpwnd_win__ = NULL;
 	}

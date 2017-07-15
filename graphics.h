@@ -6,6 +6,9 @@
 #define WND_TITLE		"Fractal Watcher"
 #define IMAGES_BASE_DIR "./Images/"
 
+#define IMAGE_BUFFER_WIDTH 700
+#define IMAGE_BUFFER_HEIGHT 500
+
 
 typedef unsigned char flag_t;
 typedef unsigned int color_t;
@@ -23,19 +26,15 @@ typedef unsigned long counter_t;
 	(color_t)(255.*(.596*r-.274*g-.321*b)),	\
 	(color_t)(255.*(.211*r-.523*g+.311*b)))
 
-
-#ifndef IMAGE_BUFFER_WIDTH
-#define IMAGE_BUFFER_WIDTH 700
-#endif
-
-#ifndef IMAGE_BUFFER_HEIGHT
-#define IMAGE_BUFFER_HEIGHT 500
-#endif
-
 #define SCREEN_TO_CX_MIN	-1.2
 #define SCREEN_TO_CX_MAX	1.2
 #define SCREEN_TO_CY_MIN	-1.2
 #define SCREEN_TO_CY_MAX	1.2
+
+#define JULIA_SCREEN_TO_CX_MIN	-1.0
+#define JULIA_SCREEN_TO_CX_MAX	1.0
+#define JULIA_SCREEN_TO_CY_MIN	-1.0
+#define JULIA_SCREEN_TO_CY_MAX	1.0
 
 #define MIN_ITERATIONS		50
 #define MAX_ITERATIONS		500
@@ -44,6 +43,7 @@ typedef unsigned long counter_t;
 
 #define MIN_ZOOM			0.5
 #define MAX_ZOOM			25000.0
+#define MAX_ANIMATE_ZOOM	100000.0
 
 #define MIN_MOVE_SCALE		0.05
 #define MAX_MOVE_SCALE		2.0
