@@ -12,8 +12,7 @@ LDFLAGS = -L../../minilibx/ -lmlx -L/usr/lib -lXext -lX11 -lm -lpng
 LIBS =
 
 TARGET = graphics
-
-SOURCES = graphics.c mlx_screenshot.c
+SOURCES = graphics.c mlx_screenshot.c helpwnd.c
 OBJECTS = $(SOURCES:.c=.o)
 
 RM = rm -fr

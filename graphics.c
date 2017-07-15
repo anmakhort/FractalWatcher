@@ -10,6 +10,7 @@
 #include "concolor.h"
 #include "graphics.h"
 #include "mlx_screenshot.h"
+#include "helpwnd.h"
 
 
 int endian;
@@ -45,22 +46,29 @@ int my_loop();
 int mouse_move(int x, int y);
 int	key_released(int key);
 
-void current_date_time(char *buff, const char *base_dir) {
+void prepare_saving_dir_and_path(char *buff, const char *base_dir) {
 	if (!buff) return;
+
+	memcpy(buff, base_dir, strlen(base_dir));
+
+	struct stat st = {0};
+	if (stat(buff, &st) == -1) mkdir(buff, 0700);
 
 	time_t t = time(NULL);
 	struct tm local = *localtime(&t);
-	sprintf(buff, "%s/%d-%d-%d_%dh%dm%ds/", \
-		base_dir, local.tm_year+1900, local.tm_mon+1, \
-		local.tm_mday, local.tm_hour, local.tm_min, local.tm_sec);
-	
-	struct stat st = {0};
+	sprintf(buff, "%s%d-%d-%d_%d:%d:%d/", buff, \
+		local.tm_year+1900, local.tm_mon+1, local.tm_mday, \
+		local.tm_hour, local.tm_min, local.tm_sec);
+
 	if (stat(buff, &st) == -1) mkdir(buff, 0700);
 }
 
 
 int main() {
-	current_date_time(_images_dir_, IMAGES_BASE_DIR);
+	prepare_saving_dir_and_path(_images_dir_, IMAGES_BASE_DIR);
+#ifdef _VERBOSE
+	printf("[%lu] SAVING DIRECTORY -- %s\n", ++cntr, BOLD(_images_dir_, _FG_GREEN_));
+#endif
 
 	endian = is_BigEndian();
 #ifdef _VERBOSE
@@ -152,7 +160,6 @@ int mouse_move(int x, int y) {
 }
 
 int	key_released(int key) {
-	printf("0x%x\n", key);
 	if (key == KEYBOARD_EXIT_KEY || key == KEYBOARD_QUIT_KEY) {
 		mlx_destroy_image(hWnd.mlx_ptr, image.img_buff);
 #ifdef _VERBOSE
@@ -259,6 +266,9 @@ int	key_released(int key) {
 		case KEYBOARD_P_KEY:
 			mlx_snap_window(hWnd.mlx_ptr, hWnd.mlx_win, _images_dir_, \
 				(mandelbrot ? "Mandelbrot" : "Julia"), (++n_snap), FORMAT_PNG);
+			break;
+		case KEYBOARD_H_KEY:
+			show_help_window(hWnd.mlx_ptr);
 			break;
 		default:
 			return 1;
