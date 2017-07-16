@@ -1,6 +1,8 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include <stdlib.h>
+#include <math.h>
 
 #define WND_BG_COLOR	0
 #define WND_TITLE		"Fractal Watcher"
@@ -11,7 +13,23 @@
 
 
 typedef unsigned char flag_t;
+typedef unsigned int color_t;
 typedef unsigned long counter_t;
+
+#define DBL2INT(a) (((color_t)(255.*a)) % 256)
+
+#define PACK_COLOR_RGB(r,g,b) (color_t)(((color_t)(r)<<0x10)|((color_t)(g)<<0x8)|((color_t)(b)))
+
+/*
+|y|   |0.299  0.587   0.114	 |   |r|
+|i| = |0.596  -0.274  -0.321 | * |g|
+|q|   |0.211  -0.523  0.311  |   |b|
+*/
+#define RGB2YIQ(r,g,b) PACK_COLOR_RGB(		\
+	(color_t)(255.*(.299*r+.587*g+.114*b)),	\
+	(color_t)(255.*(.596*r-.274*g-.321*b)),	\
+	(color_t)(255.*(.211*r-.523*g+.311*b)))
+
 
 
 #define SCREEN_TO_CX_MIN	-1.2

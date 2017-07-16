@@ -9,7 +9,6 @@
 #include "graphics.h"
 #include "mlx_screenshot.h"
 #include "helpwnd.h"
-#include "coloring.h"
 
 
 int endian;
@@ -18,7 +17,7 @@ int endian;
 counter_t cntr = 0;
 #endif
 
-static char _images_dir_[64];
+static char _images_dir_[64] = {0};
 static unsigned int n_snap = 0;
 
 flag_t need_update = 0;
@@ -28,15 +27,6 @@ flag_t save_position = 0;
 
 
 unsigned coloring_idx = 0;
-
-coloring_func_t coloring_functions[] = {	coloring0, coloring1,\
-											coloring2, coloring3,\
-											coloring4, coloring5,\
-											coloring6, coloring7,\
-											coloring8, coloring9\
-									};
-
-
 unsigned n_iters = NORMAL_ITERATIONS;
 
 double julia_X = 0., julia_Y = 0.;
@@ -75,11 +65,6 @@ void prepare_saving_dir_and_path(char *buff, const char *base_dir) {
 
 
 int main() {
-	prepare_saving_dir_and_path(_images_dir_, IMAGES_BASE_DIR);
-#ifdef _VERBOSE
-	printf("[%lu] SAVING DIRECTORY -- %s\n", ++cntr, BOLD(_images_dir_, _FG_GREEN_));
-#endif
-
 	endian = is_BigEndian();
 #ifdef _VERBOSE
 	printf("[%lu] ENDIAN -- %s\n", ++cntr, (!endian ? BOLD("Little", _FG_YELLOW_) : BOLD("Big", _FG_YELLOW_)));
@@ -272,10 +257,12 @@ int	key_released(int key) {
 			} else return 1;
 			break;
 		case KEYBOARD_B_KEY:
+			if (!_images_dir_[0]) prepare_saving_dir_and_path(_images_dir_, IMAGES_BASE_DIR);
 			mlx_snap_window(hWnd.mlx_ptr, hWnd.mlx_win, _images_dir_, \
 				(mandelbrot ? "Mandelbrot" : "Julia"), (++n_snap), FORMAT_BMP);
 			break;
 		case KEYBOARD_P_KEY:
+			if (!_images_dir_[0]) prepare_saving_dir_and_path(_images_dir_, IMAGES_BASE_DIR);
 			mlx_snap_window(hWnd.mlx_ptr, hWnd.mlx_win, _images_dir_, \
 				(mandelbrot ? "Mandelbrot" : "Julia"), (++n_snap), FORMAT_PNG);
 			break;
@@ -416,7 +403,24 @@ int	fill_image(unsigned char *data, int bpp, int sl, int w, int h) {
 				if (magn > r*r) break;
 			}
 
-			color_t color = coloring_functions[coloring_idx](z_x, z_y, i, n_iters, r);
+			color_t color = 0UL;
+
+			switch (coloring_idx) {
+				case 0:
+					color = RGB2YIQ(0, sqrt(magn)/r, (double)i/n_iters);
+					break;
+				case 1:
+					color = PACK_COLOR_RGB(DBL2INT(sqrt(magn)/r), 0, i%256);
+					break;
+				case 2:
+					color = PACK_COLOR_RGB(75,\
+						DBL2INT(((double)i-(log(0.5*log(magn))-log(log(r)))/log(2.0))),\
+						DBL2INT((double)i/(double)n_iters));
+					break;
+				default:
+					color = PACK_COLOR_RGB(0, i%256, DBL2INT(sqrt(magn)/r));
+					break;
+			}
 
 			dec = opp;
 			while (dec--) {
