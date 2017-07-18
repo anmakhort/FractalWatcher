@@ -5,7 +5,7 @@
 #################################################################
 
 CC = gcc
-CFLAGS = -std=c99 -Wall -Wextra -Werror
+CFLAGS = -std=c99 -Wall -Wextra -Werror -O3
 #TARGET_VERBOSE = -D_VERBOSE
 DEFINES = -D_XOPEN_SOURCE
 INCLUDES = -I/usr/include -I/usr/X11/include
