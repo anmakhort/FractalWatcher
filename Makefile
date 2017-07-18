@@ -9,7 +9,7 @@ CFLAGS = -std=c99 -Wall -Wextra -Werror
 #TARGET_VERBOSE = -D_VERBOSE
 DEFINES = -D_XOPEN_SOURCE
 INCLUDES = -I/usr/include -I/usr/X11/include
-LDFLAGS = -L./minilibx/ -lmlx -L/usr/lib -lXext -lX11 -lm -lpng
+LDFLAGS = -L./minilibx/ -lmlx_Linux -L/usr/lib -lXext -lX11 -lm -lpng
 LIBS =
 
 TARGET = fractwtcher
